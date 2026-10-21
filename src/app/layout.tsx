@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Red_Hat_Display, Red_Hat_Mono } from "next/font/google";
+import { PulseSnippet } from "@/components/PulseSnippet";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -20,7 +21,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <PulseSnippet />
+      </body>
     </html>
   );
 }

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { startCommittee, type StartState } from "@/app/(app)/committees/[id]/start-action";
+import { track } from "@/lib/pulse";
 import { CompletePanel } from "./CompletePanel";
 import { Icon } from "./Icon";
 import { useConfirmFocus } from "./useConfirmFocus";
@@ -32,6 +33,9 @@ type Props = {
 export function StatusPanel({ committeeId, status, problems, startedInThePast, startText, lastDueText, completion }: Props) {
   const [state, action, pending] = useActionState(startCommittee, initial);
   const [asking, setAsking] = useState(false);
+  useEffect(() => {
+    if (state.started) track("committee_started");
+  }, [state.started]);
   const { box, trigger } = useConfirmFocus(asking);
   const shown = state.problems.length > 0 ? state.problems : problems;
   const blocked = shown.length > 0;

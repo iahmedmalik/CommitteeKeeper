@@ -5,6 +5,7 @@ import { startTransition, useActionState, useEffect, useRef, useState, type Form
 import { recordPayment, type PayState } from "@/app/(app)/committees/[id]/payments/actions";
 import { METHODS, METHOD_LABELS, PAYMENT_NOTE_MAX } from "@/lib/payments";
 import { RECEIPTS_PER_PAYMENT } from "@/lib/receipts";
+import { track } from "@/lib/pulse";
 import { uploadReceipt } from "@/lib/upload-receipt";
 import type { HolderStretch } from "@/lib/turns";
 import { Icon } from "./Icon";
@@ -39,6 +40,7 @@ export function PaymentForm(props: Props) {
   useEffect(() => {
     const files = chosen.current;
     if (!state.paymentId) return;
+    track("payment_recorded");
     chosen.current = [];
     if (files.length === 0) return;
     (async () => {

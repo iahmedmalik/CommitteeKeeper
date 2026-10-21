@@ -48,6 +48,10 @@ Every change to a committee (a payment, a correction, a draw, a payout) is writt
 
 The History page also prints or saves as a PDF in the app's own design.
 
+## Measuring its own use
+
+CommitteeKeeper can count how it is used with [PulseMetrics](https://github.com/ahmed-malikk/PulseMetrics), a small analytics tool that never learns who did something. It sends three fixed event names (`member_link_opened`, `payment_recorded`, `committee_started`) and a random browser id, and nothing else: never a page address (a member's link is a private token), a name, a phone number or an amount. It is off unless three settings are present at build time (`NEXT_PUBLIC_PULSE_KEY`, `NEXT_PUBLIC_PULSE_SRC`, `NEXT_PUBLIC_PULSE_API`). A browser test checks that a member's private link is never sent, and the [privacy page](src/app/privacy/page.tsx) says what is counted.
+
 ## Stack
 
 Next.js and TypeScript, Supabase (Postgres with row-level security) for data, Vercel for hosting.

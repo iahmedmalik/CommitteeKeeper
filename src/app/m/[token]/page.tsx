@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { AttachAccount } from "@/components/AttachAccount";
 import { MemberBody } from "@/components/MemberBody";
 import { PageTransition } from "@/components/PageTransition";
+import { PulseEvent } from "@/components/PulseEvent";
 import { PublicShell } from "@/components/PublicShell";
 import { getCurrentUser } from "@/lib/dal";
 import { looksLikeToken, parseMemberView } from "@/lib/member-view";
@@ -44,6 +45,8 @@ export default async function MemberPage({ params }: { params: Promise<{ token: 
 
   return (
     <PublicShell>
+      {/* usage measurement: only the event name is sent, never this page's private link */}
+      <PulseEvent name="member_link_opened" />
       <PageTransition>
         <MemberBody view={view} receiptHref={(paymentId, n) => `/m/${token}/receipt/${paymentId}/${n}`} />
         <section className="mview mblock maccount" aria-labelledby="macc-h">

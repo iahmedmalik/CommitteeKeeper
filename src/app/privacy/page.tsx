@@ -34,7 +34,11 @@ export default function PrivacyPage() {
           </ul>
           <h3>What is not stored</h3>
           <p>
-            No bank or card details, no ID card numbers, no location, no advertising or tracking cookies and no analytics. The only cookies are the ones that keep you signed in.
+            No bank or card details, no ID card numbers, no location and no advertising or tracking cookies. The only cookies are the ones that keep you signed in.
+          </p>
+          <h3>How the app measures its own use</h3>
+          <p>
+            CommitteeKeeper counts three things with PulseMetrics, a small analytics tool built to know nothing about people: that a member&rsquo;s page was opened, that a payment was saved, and that a committee was started. Only the name of the event and a random id that stays in the browser are sent. Never the page address (so never a private link), a name, a phone number, an email, an amount or an IP address. A browser with Do Not Track switched on is not counted at all.
           </p>
 
           <h2>Who can see it</h2>
