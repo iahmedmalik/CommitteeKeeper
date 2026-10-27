@@ -1,7 +1,7 @@
 // The words on the "How it's built" page, kept apart from the layout so they are easy to read and to change.
 // Everything here is a fact about the project that can be checked in the repository. The personal wording is Ahmed's to rewrite.
 
-export const REPO = "https://github.com/ahmed-malikk/CommitteeKeeper";
+export const REPO = "https://github.com/iahmedmalik/CommitteeKeeper";
 
 /** Real numbers from the last full run. Update them from the test output, never by guessing. */
 export const TESTS = {
