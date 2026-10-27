@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { signOut } from "@/app/(auth)/actions";
+import { signOut } from "@/app/(public)/actions";
 import { Icon, type IconName } from "./Icon";
 
 export type Tab = { href: string; label: string; icon: IconName };

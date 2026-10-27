@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { attachAccount, type AttachState } from "@/app/m/[token]/attach-action";
+import { attachAccount, type AttachState } from "@/app/(public)/m/[token]/attach-action";
 import { Icon } from "./Icon";
 import { ErrorNote } from "./states";
 

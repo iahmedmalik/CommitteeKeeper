@@ -1,5 +1,5 @@
-import { expect, test } from "@playwright/test";
-import { EMPTY_STATE, ORGANISER_STATE } from "./helpers";
+import { expect, test, type Page } from "@playwright/test";
+import { EMPTY_STATE, ORGANISER_STATE, SIGNED_OUT } from "./helpers";
 
 test.use({ storageState: ORGANISER_STATE });
 
@@ -57,5 +57,55 @@ test.describe("reduced motion", () => {
   test("the page is fully visible almost at once", async ({ page }) => {
     await page.goto("/committees");
     await expect.poll(() => page.locator(".pw").first().evaluate((el) => getComputedStyle(el).opacity), { timeout: 1500 }).toBe("1");
+  });
+});
+
+/** Wraps the browser's startViewTransition so a test can see which pseudo-elements a page change animated. */
+async function recordPageChanges(page: Page) {
+  await page.evaluate(() => {
+    const w = window as unknown as { __vt: string[] };
+    w.__vt = [];
+    const original = document.startViewTransition.bind(document);
+    document.startViewTransition = ((arg: Parameters<typeof original>[0]) => {
+      const t = original(arg);
+      t.ready
+        .then(() => {
+          for (const a of document.getAnimations()) {
+            const pe = (a.effect as KeyframeEffect | null)?.pseudoElement;
+            if (pe?.startsWith("::view-transition")) w.__vt.push(`${pe} ${(a as CSSAnimation).animationName ?? ""}`);
+          }
+        })
+        .catch(() => undefined);
+      return t;
+    }) as typeof document.startViewTransition;
+  });
+}
+const pageChanges = (page: Page) => page.evaluate(() => (window as unknown as { __vt: string[] }).__vt);
+
+// The public pages share one layout, so the header and iris stay put and each page's own PageTransition can run (#34).
+test.describe("public page changes", () => {
+  test.use({ storageState: SIGNED_OUT });
+
+  test("moving between public pages slides the page and keeps the header still", async ({ page }) => {
+    await page.goto("/");
+    await recordPageChanges(page);
+    await page.getByRole("contentinfo").getByRole("link", { name: "How it’s built" }).click();
+    await expect(page).toHaveURL(/\/how-its-built$/);
+    await expect.poll(() => pageChanges(page)).toContainEqual(expect.stringMatching(/view-transition-new.* vt-rise$/));
+    const seen = await pageChanges(page);
+    expect(seen.some((n) => /view-transition-old.* vt-fade$/.test(n))).toBe(true);
+    expect(seen.filter((n) => /ck-pubhead|ck-iris/.test(n) && !/group/.test(n))).toEqual([]);
+  });
+
+  test.describe("with reduced motion", () => {
+    test.use({ reducedMotion: "reduce" });
+    test("a public page change only fades", async ({ page }) => {
+      await page.goto("/");
+      await recordPageChanges(page);
+      await page.getByRole("contentinfo").getByRole("link", { name: "Privacy" }).click();
+      await expect(page).toHaveURL(/\/privacy$/);
+      await expect.poll(() => pageChanges(page)).toContainEqual(expect.stringMatching(/view-transition-new.* vt-fade$/));
+      expect((await pageChanges(page)).some((n) => n.endsWith("vt-rise"))).toBe(false);
+    });
   });
 });

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { signIn, signUp, type AuthState } from "@/app/(auth)/actions";
+import { signIn, signUp, type AuthState } from "@/app/(public)/actions";
 import { Icon } from "./Icon";
 import { ErrorNote } from "./states";
 

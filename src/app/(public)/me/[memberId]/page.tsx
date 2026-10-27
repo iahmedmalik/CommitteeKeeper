@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { Icon } from "@/components/Icon";
 import { MemberBody } from "@/components/MemberBody";
 import { PageTransition } from "@/components/PageTransition";
-import { PublicShell } from "@/components/PublicShell";
 import { isUuid, requireUser } from "@/lib/dal";
 import { parseMemberView } from "@/lib/member-view";
 import { createClient } from "@/lib/supabase/server";
@@ -22,16 +21,14 @@ export default async function MyMembership({ params }: { params: Promise<{ membe
   if (!view) notFound();
 
   return (
-    <PublicShell>
-      <PageTransition>
-        <p style={{ marginTop: 16 }}>
-          <Link className="btn ghost small" href="/me">
-            <Icon name="back" />
-            All my committees
-          </Link>
-        </p>
-        <MemberBody view={view} receiptHref={(paymentId, n) => `/me/${memberId}/receipt/${paymentId}/${n}`} />
-      </PageTransition>
-    </PublicShell>
+    <PageTransition>
+      <p style={{ marginTop: 16 }}>
+        <Link className="btn ghost small" href="/me">
+          <Icon name="back" />
+          All my committees
+        </Link>
+      </p>
+      <MemberBody view={view} receiptHref={(paymentId, n) => `/me/${memberId}/receipt/${paymentId}/${n}`} />
+    </PageTransition>
   );
 }

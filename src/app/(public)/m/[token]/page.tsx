@@ -4,7 +4,6 @@ import { AttachAccount } from "@/components/AttachAccount";
 import { MemberBody } from "@/components/MemberBody";
 import { PageTransition } from "@/components/PageTransition";
 import { PulseEvent } from "@/components/PulseEvent";
-import { PublicShell } from "@/components/PublicShell";
 import { getCurrentUser } from "@/lib/dal";
 import { looksLikeToken, parseMemberView } from "@/lib/member-view";
 import { createClient } from "@/lib/supabase/server";
@@ -23,12 +22,10 @@ export default async function MemberPage({ params }: { params: Promise<{ token: 
   // A database that can't be reached is not a link that doesn't work: say so, instead of telling the member their link is dead.
   if (error) {
     return (
-      <PublicShell>
-        <div className="prose" style={{ paddingTop: 24 }}>
-          <h1>We couldn&rsquo;t load this page</h1>
-          <p className="mut">Check your connection and refresh. Your link is fine.</p>
-        </div>
-      </PublicShell>
+      <div className="prose" style={{ paddingTop: 24 }}>
+        <h1>We couldn&rsquo;t load this page</h1>
+        <p className="mut">Check your connection and refresh. Your link is fine.</p>
+      </div>
     );
   }
   const view = parseMemberView(data);
@@ -44,7 +41,7 @@ export default async function MemberPage({ params }: { params: Promise<{ token: 
   const next = encodeURIComponent(`/m/${token}`);
 
   return (
-    <PublicShell>
+    <>
       {/* usage measurement: only the event name is sent, never this page's private link */}
       <PulseEvent name="member_link_opened" />
       <PageTransition>
@@ -72,6 +69,6 @@ export default async function MemberPage({ params }: { params: Promise<{ token: 
           )}
         </section>
       </PageTransition>
-    </PublicShell>
+    </>
   );
 }
